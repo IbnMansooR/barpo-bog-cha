@@ -1,3 +1,46 @@
 {
-  "models": []
+  "models": [
+    {
+      "id": "a-block-oshxona",
+      "name": "A Block Oshxona",
+      "file": "models/A block oshxona.glb",
+      "size": "16 MB"
+    },
+    {
+      "id": "a-block-stadion",
+      "name": "A Block Stadion",
+      "file": "models/A block stadion.glb",
+      "size": "1.8 MB"
+    },
+    {
+      "id": "b-block-2-qavat",
+      "name": "B Block 2 Qavat",
+      "file": "models/B block 2-qavat.glb",
+      "size": "21 MB"
+    },
+    {
+      "id": "b-block-3-qavat",
+      "name": "B Block 3 Qavat",
+      "file": "models/B block 3- qavat.glb",
+      "size": "16 MB"
+    },
+    {
+      "id": "b-block-hall",
+      "name": "B Block Hall",
+      "file": "models/b block hall.glb",
+      "size": "42 MB"
+    },
+    {
+      "id": "v-block-2-qavat",
+      "name": "V Block 2 Qavat",
+      "file": "models/V block 2 qavat.glb",
+      "size": "6.4 MB"
+    },
+    {
+      "id": "v-block-podval-1-qavat",
+      "name": "V Block Podval + 1 Qavat",
+      "file": "models/V block podval + 1-qavat.glb",
+      "size": "10 MB"
+    }
+  ]
 }
