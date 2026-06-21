@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>BĀRPO — Model</title>
+  <link rel="icon" type="image/png" href="assets/logo-dark.png" />
+  <meta name="theme-color" content="#0b1020" />
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+  <style>
+    :root { --navy:#0b1020; --accent:#c9a24b; }
+    * { box-sizing: border-box; }
+    html, body { margin:0; padding:0; height:100%; background:#0b1020; color:#eef1f8;
+      font-family:"Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif; overflow:hidden; }
+    .topbar {
+      position:fixed; top:0; left:0; right:0; z-index:10;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding:12px clamp(12px,3vw,24px);
+      background:linear-gradient(180deg, rgba(11,16,32,.92), rgba(11,16,32,0));
+    }
+    .back {
+      display:inline-flex; align-items:center; gap:8px; text-decoration:none;
+      color:#eef1f8; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14);
+      padding:9px 14px; border-radius:11px; font-size:14px; font-weight:600; transition:.15s;
+    }
+    .back:hover { background:rgba(255,255,255,.16); }
+    .title { font-size:15px; font-weight:600; opacity:.95; text-align:center;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:50vw; }
+    .brand img { height:24px; display:block; }
+
+    model-viewer {
+      width:100vw; height:100vh; background:
+        radial-gradient(ellipse at 50% 35%, #1a2140 0%, #0b1020 70%);
+      --poster-color:transparent;
+    }
+    .ar-btn {
+      position:absolute; bottom:22px; left:50%; transform:translateX(-50%);
+      background:var(--accent); color:#1a1305; border:none; border-radius:12px;
+      padding:13px 22px; font-size:15px; font-weight:700; cursor:pointer;
+      box-shadow:0 6px 20px rgba(0,0,0,.4); display:inline-flex; align-items:center; gap:9px;
+    }
+    .controls {
+      position:fixed; right:16px; bottom:22px; z-index:10; display:flex; flex-direction:column; gap:10px;
+    }
+    .controls button {
+      width:46px; height:46px; border-radius:12px; cursor:pointer; font-size:20px;
+      background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); color:#eef1f8; transition:.15s;
+    }
+    .controls button:hover { background:rgba(255,255,255,.18); }
+    .loading {
+      position:fixed; inset:0; display:grid; place-items:center; color:#9aa3bd; font-size:14px;
+      pointer-events:none;
+    }
+    .err { position:fixed; inset:0; display:grid; place-items:center; text-align:center; padding:24px; }
+    .err a { color:var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <a class="back" href="index.html">← Orqaga</a>
+    <div class="title" id="title">Yuklanmoqda…</div>
+    <div class="brand"><img src="assets/logo-white.png" alt="BĀRPO" /></div>
+  </div>
+
+  <model-viewer id="mv"
+    camera-controls
+    auto-rotate
+    auto-rotate-delay="800"
+    rotation-per-second="18deg"
+    touch-action="none"
+    interaction-prompt="auto"
+    ar
+    ar-modes="webxr scene-viewer quick-look"
+    shadow-intensity="1"
+    exposure="1.05"
+    environment-image="neutral">
+    <button slot="ar-button" class="ar-btn">📱 AR — xonangizda ko'ring</button>
+    <div class="loading" slot="poster" id="loading">Model yuklanmoqda…</div>
+  </model-viewer>
+
+  <div class="controls">
+    <button id="rotate" title="Aylantirishni to'xtatish/yoqish">⏯️</button>
+    <button id="reset" title="Boshlang'ich holat">↺</button>
+    <button id="full" title="To'liq ekran">⛶</button>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const id = params.get('m');
+    const mv = document.getElementById('mv');
+    const titleEl = document.getElementById('title');
+
+    fetch('models.json?v=' + Date.now())
+      .then(r => r.json())
+      .then(data => {
+        const m = (data.models || []).find(x => x.id === id) || (data.models || [])[0];
+        if (!m) { showErr(); return; }
+        document.title = 'BĀRPO — ' + m.name;
+        titleEl.textContent = m.name;
+        mv.src = m.file;
+      })
+      .catch(showErr);
+
+    function showErr() {
+      document.body.innerHTML =
+        '<div class="err"><div><h2>Model topilmadi</h2>' +
+        '<p><a href="index.html">← Galereyaga qaytish</a></p></div></div>';
+    }
+
+    document.getElementById('rotate').addEventListener('click', () => {
+      mv.autoRotate = !mv.autoRotate;
+    });
+    document.getElementById('reset').addEventListener('click', () => {
+      mv.cameraOrbit = 'auto auto auto';
+      mv.fieldOfView = 'auto';
+      mv.jumpCameraToGoal();
+    });
+    document.getElementById('full').addEventListener('click', () => {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+      else document.exitFullscreen?.();
+    });
+  </script>
+</body>
+</html>
